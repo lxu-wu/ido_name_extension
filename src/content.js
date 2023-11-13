@@ -12,27 +12,21 @@ function updateValue(inputValue) {
   activeElement.value = activeElement.value ? activeElement.value + "\n" + message : message;
 }
 
+function updateInputValue(value) {
+  inputValue = value;
+  chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
+}
+
 function changeInputValue() {
-  const name = prompt('Enter your name:');
-  updateInputValue(name);
-  return name;
+  const newValue = prompt('Ton NOM :');
+  if (newValue) {
+    updateInputValue(newValue);
+  }
+  return newValue;
 }
 
 function injectName() {
   let inputValue = null;
-
-  const updateInputValue = (value) => {
-    inputValue = value;
-    chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
-  };
-
-  const changeInputValue = () => {
-    const newValue = prompt('Ton NOM :');
-    if (newValue) {
-      updateInputValue(newValue);
-    }
-    return newValue;
-  };
 
   chrome.storage.local.get('inputValue', function(data) {
     if (data.inputValue) {
