@@ -48,7 +48,7 @@ function injectName() {
 
     if (autoComplete && activeElement && !activeElement.value && name.includes(activeElement.getAttribute('name'))) {
       if (!inputValue) {
-        inputValue = prompt('Ton NOM :');
+        inputValue = changeInputValue();
       }
       if (inputValue) {
         updateValue(inputValue);
@@ -63,7 +63,7 @@ function injectName() {
       if ((activeElement && activeElement.tagName === 'INPUT' && activeElement.type === 'text') ||
           (activeElement && activeElement.tagName === 'TEXTAREA')) {
         if (!inputValue) {
-          inputValue = prompt('Ton NOM :');
+          inputValue = changeInputValue();
         }
         if (inputValue) {
           updateValue(inputValue);
