@@ -1,6 +1,30 @@
+function updateInputValue(inputValue) {
+  const activeElement = document.activeElement;
+  const currentDate = new Date();
+  const day = currentDate.getDate().toString().padStart(2, '0');
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const year = currentDate.getFullYear();
+  const hours = currentDate.getHours().toString().padStart(2, '0');
+  const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+  const currentDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+  if (activeElement.value)
+    activeElement.value = activeElement.value + "\n" + "(" + inputValue + " " + currentDateTime + ")" + " : ";
+  else
+    activeElement.value = "(" + inputValue + " " + currentDateTime  + ")" + " : ";
+}
+
+
+
+function changeInputValue() {
+  inputValue = prompt('Ton NOM :');
+  chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
+  return inputValue;
+}
+
 function injectName() {
   let inputValue = null;
-
+  
   chrome.storage.local.get('inputValue', function(data) {
     if (data.inputValue) {
       inputValue = data.inputValue;
@@ -13,6 +37,24 @@ function injectName() {
       inputValue = newValue;
     }
   });
+
+  document.addEventListener('click', function(event) {
+    const activeElement = document.activeElement;
+    
+    const name = ["tellcustomer", "report", "aesthetic", "diagnostic", "solution", "comment"];
+    
+    if (autoComplete && activeElement && !activeElement.value && name.includes(activeElement.getAttribute('name')))
+      {
+      if (!inputValue)
+        inputValue = prompt('Ton NOM :');
+        chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
+      if (inputValue) {
+        updateInputValue(inputValue);
+      }
+    }
+
+  });
+
   document.addEventListener('keydown', function(event) {
     if (event.metaKey && event.key === 'i') {
       const activeElement = document.activeElement;
@@ -22,23 +64,12 @@ function injectName() {
           inputValue = prompt('Ton NOM :');
           chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
         if (inputValue) {
-          const currentDate = new Date();
-          const day = currentDate.getDate().toString().padStart(2, '0');
-          const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-          const year = currentDate.getFullYear();
-          const hours = currentDate.getHours().toString().padStart(2, '0');
-          const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-          const currentDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
-          if (activeElement.value)
-            activeElement.value = activeElement.value + "\n" + "(" + inputValue + " " + currentDateTime + ")" + " : ";
-          else
-            activeElement.value = "(" + inputValue + " " + currentDateTime  + ")" + " : ";
+          updateInputValue(inputValue);
         }
       }
     }
     if (event.metaKey && event.key === 'h') {
-      inputValue = prompt('Ton NOM :');
-      chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
+      inputValue = changeInputValue();
     }
   });
 }
