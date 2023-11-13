@@ -56,7 +56,7 @@ function injectName() {
   });
 
   document.addEventListener('keydown', function(event) {
-    if (event.metaKey && event.key === 'i') {
+    if (event.ctrlKey && event.key === 'i') {
       const activeElement = document.activeElement;
       if ( (activeElement && activeElement.tagName === 'INPUT' && activeElement.type === 'text' ) ||
           (activeElement && activeElement.tagName === 'TEXTAREA') ) {
@@ -68,7 +68,7 @@ function injectName() {
         }
       }
     }
-    if (event.metaKey && event.key === 'h') {
+    if (event.ctrlKey && event.key === 'm') {
       inputValue = changeInputValue();
     }
   });
