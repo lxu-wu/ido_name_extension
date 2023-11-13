@@ -17,6 +17,11 @@ function updateInputValue(value) {
   chrome.runtime.sendMessage({ action: 'updateInputValue', value: inputValue });
 }
 
+function updateCheckboxValue(value) {
+  checkboxValue = value;
+  chrome.runtime.sendMessage({ action: 'updateCheckboxValue', value: checkboxValue });
+}
+
 function changeInputValue() {
   const newValue = prompt('Ton NOM :');
   if (newValue) {
@@ -27,6 +32,8 @@ function changeInputValue() {
 
 function injectName() {
   let inputValue = null;
+  let autoComplete = true;
+  updateCheckboxValue(autoComplete);
 
   chrome.storage.local.get('inputValue', function(data) {
     if (data.inputValue) {
@@ -34,12 +41,23 @@ function injectName() {
     }
   });
 
+  chrome.storage.local.get('checkboxValue', function(data) {
+    if (data.checkboxValue) {
+      autoComplete = data.checkboxValue;
+    }
+  })
+
   chrome.storage.onChanged.addListener(function(changes, namespace) {
     if (changes.inputValue) {
       const newValue = changes.inputValue.newValue;
       inputValue = newValue;
     }
+    if (changes.checkboxValue) {
+      const newValue = changes.checkboxValue.newValue;
+      autoComplete = newValue;
+    }
   });
+
 
   document.addEventListener('click', function(event) {
     const activeElement = document.activeElement;
@@ -82,5 +100,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === 'updateInputValue') {
     const inputValue = request.value;
     chrome.storage.local.set({ 'inputValue': inputValue });
+  }
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === 'updateCheckboxValue') {
+    const inputValue = request.value;
+    chrome.storage.local.set({ 'checkboxValue': inputValue });
   }
 });
