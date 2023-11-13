@@ -1,8 +1,10 @@
-checkboxValue = true;
 
 chrome.storage.local.get('checkboxValue', function(data) {
-  if (data.checkboxValue !== undefined) {
-    updateCheckboxValue(data.checkboxValue);
+  if (data.checkboxValue === undefined) {
+    updateCheckboxValue(true);
+  }
+  else if (data.checkboxValue) {
+    updateCheckboxValue(checkboxValue);
   }
 });
 

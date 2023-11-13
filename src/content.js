@@ -32,8 +32,7 @@ function changeInputValue() {
 
 function injectName() {
   let inputValue = null;
-  let autoComplete = true;
-  updateCheckboxValue(autoComplete);
+  let autoComplete = null;
 
   chrome.storage.local.get('inputValue', function(data) {
     if (data.inputValue) {

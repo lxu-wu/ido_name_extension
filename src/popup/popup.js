@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     chrome.storage.local.set({ 'checkboxValue': autoCompleteInput.checked }, function() {
       chrome.runtime.sendMessage({ action: 'updateCheckboxValue', value: autoCompleteInput.checked });
+      console.log('Valeur de checkboxValue mise à jour dans le stockage local :', autoCompleteInput.checked);
     });
     window.close();
   });
